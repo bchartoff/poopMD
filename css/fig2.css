@@ -1,0 +1,15 @@
+body{
+	font-family: 'Open Sans', sans-serif;
+}
+h1{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	text-indent: 20px;
+	margin-bottom: 10px;
+}
+.subtitle{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
+	font-size: 15px;
+	color: black;
+}

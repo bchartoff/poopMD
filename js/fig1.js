@@ -21,12 +21,11 @@ function drawFig1(){
 		var height = 1000;
 		var cellSize = 15;
 		var margin = {"left": 20, "top": 30, "right": 20, "bottom": 20}
-		var svg = d3.select("#figure1")
-			.append("svg")
-			.attr("width",width)
-			.attr("height",height)
+		var svg = d3.select("#figure1 svg")
+			// .append("svg")
+			.attr("width",width + margin.left + margin.right)
+			.attr("height",height + margin.top + margin.bottom)
 			.append("g")
-
 
 		svg
 			.selectAll(".normalRect")
@@ -43,7 +42,18 @@ function drawFig1(){
 				console.log(rowCount)
 				return margin.left + ( (((i-1)%rowCount)) * (cellSize) )
 			})
+			.attr("data-x", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				console.log(rowCount)
+				return margin.left + ( (((i-1)%rowCount)) * (cellSize) )
+			})
 			.attr("y", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
+			})
+			.attr("data-y", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
 				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
@@ -63,7 +73,18 @@ function drawFig1(){
 				console.log(rowCount)
 				return margin.right + width/3 + ( (((i-1)%rowCount)) * (cellSize) )
 			})
+			.attr("data-x", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				console.log(rowCount)
+				return margin.right + width/3 + ( (((i-1)%rowCount)) * (cellSize) )
+			})
 			.attr("y", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
+			})
+			.attr("data-y", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
 				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
@@ -84,7 +105,18 @@ function drawFig1(){
 				console.log(rowCount)
 				return margin.right + 2*width/3 + ( (((i-1)%rowCount)) * (cellSize) )
 			})
+			.attr("data-x", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				console.log(rowCount)
+				return margin.right + 2*width/3 + ( (((i-1)%rowCount)) * (cellSize) )
+			})
 			.attr("y", function(d,i){
+				i += 1;
+				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
+				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
+			})
+			.attr("data-y", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - margin.left - margin.right) / cellSize) )
 				return margin.top + ( (Math.ceil(i/rowCount)-1) * (cellSize) )
@@ -94,23 +126,51 @@ function drawFig1(){
 			.attr("y",20)
 			.attr("x",margin.left)
 			.attr("class","subtitle")
-			.text("Normal")
+			.text("Normal (" + normal.length + " observations)")
 		svg
 			.append("text")
 			.attr("y",20)
 			.attr("x",width/3 + margin.left)
 			.attr("class","subtitle")
-			.text("Abnormal")
+			.text("Abnormal (" + abnormal.length + " observations)")
 		svg
 			.append("text")
 			.attr("y",20)
 			.attr("x",2*width/3 + margin.left)
 			.attr("class","subtitle")
-			.text("Indeterminate")
+			.text("Indeterminate (" + indeterminate.length + " observations)")
 	d3.selectAll("rect")
 		.on("mouseover", function(d){
 			console.log(d.color)
 			d3.select("#tooltip span").text(d.color)
+			d3.select(this).node().parentNode.appendChild(this)
+			d3.select(this)
+				.transition()
+				.delay(300)
+				.attr("x", function(){
+					return parseFloat(d3.select(this).attr("data-x")) - cellSize*1.5
+				})
+				.attr("y", function(){
+					return parseFloat(d3.select(this).attr("data-y")) - cellSize*1.5
+				})
+				.attr("width",String(cellSize * 5) + "px")
+				.attr("height",String(cellSize * 5) + "px")
+				.style("filter","url(#dropshadow)")
+		})
+		.on("mouseout", function(d){
+			d3.select(this)
+				.transition()
+				.attr("x", function(){
+					return parseFloat(d3.select(this).attr("data-x"))
+				})
+				.attr("y", function(){
+					return parseFloat(d3.select(this).attr("data-y"))
+				})
+				.attr("width",String(cellSize) + "px")
+				.attr("height",String(cellSize) + "px")
+				.style("filter","none")
+
+
 		})
 	})
 }

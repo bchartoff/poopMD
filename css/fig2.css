@@ -13,3 +13,21 @@ h1{
 	font-size: 15px;
 	color: black;
 }
+.lightBG{
+	stroke: #ececec;
+	fill: none;
+	stroke-width: 2px;
+}
+.bgBorder{
+	fill: none;
+	stroke: #ececec;
+	stroke-width: 3px;
+}
+.cornerLabel{
+	fill: #ececec;
+	stroke: none;
+}
+.cornerLabelText{
+	fill: #adadad;
+	font-weight: bold;
+}

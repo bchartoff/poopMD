@@ -1,21 +1,38 @@
+function getHCL(hex){
+ 	var color = d3.hsl(hex);
+ 	return [color.h, color.s, color.l]
+}
+
+function sortData(data, stool_type){
+	sorted = data
+			.filter(function(o){return parseInt(o.stool_type) == stool_type})
+			.sort(function(a,b){
+				return getHCL(a.color)[0] < getHCL(b.color)[0]
+			})
+	var finalSorted = sorted
+	var arrays = [], size = 14;
+
+	while (sorted.length > 0){
+    	arrays.push(sorted.splice(0, size));
+	}
+    var finalSorted = []
+    for(var i = 0; i < arrays.length; i++){
+    	var array = arrays[i]
+    	array = array.sort(function(a,b){
+				return getHCL(a.color)[2] < getHCL(b.color)[2]
+			})
+    	finalSorted = finalSorted.concat(array)
+    }
+
+
+	return finalSorted
+}
+
 function drawFig1(){
 	d3.csv("data/fig1.csv",function(error,data){
-		var normal = data
-			.filter(function(o){return parseInt(o.stool_type) == 1})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-
-		var abnormal = data
-			.filter(function(o){return parseInt(o.stool_type) == 2})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var indeterminate = data
-			.filter(function(o){return parseInt(o.stool_type) == 3})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
+		var normal = sortData(data, 1)
+		var abnormal = sortData(data, 2)
+		var indeterminate = sortData(data, 3)
 
 		var width = 750;
 		var height = 1000;

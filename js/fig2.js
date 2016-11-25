@@ -1,55 +1,54 @@
+function getHCL(hex){
+ 	var color = d3.hsl(hex);
+ 	return [color.h, color.s, color.l]
+}
+
+function sortData(data, poopmd_type, expertType){
+	sorted = data
+			.filter(function(o){console.log(o, poopmd_type, expertType); return parseInt(o.poopmd_type) == poopmd_type && parseInt(o.six_expert_type) == expertType})
+			.sort(function(a,b){
+				return getHCL(a.color)[0] < getHCL(b.color)[0]
+			})
+	var finalSorted = sorted
+	var arrays = [], size = 14;
+
+	while (sorted.length > 0){
+    	arrays.push(sorted.splice(0, size));
+	}
+    var finalSorted = []
+    for(var i = 0; i < arrays.length; i++){
+    	var array = arrays[i]
+    	array = array.sort(function(a,b){
+				return getHCL(a.color)[2] < getHCL(b.color)[2]
+			})
+    	finalSorted = finalSorted.concat(array)
+    }
+
+
+	return finalSorted
+}
+
+
 function drawFig2(expertType){
 	d3.selectAll("svg g").remove()
 	d3.csv("data/fig2.csv",function(error,data){
-		var normalNormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 1 && parseInt(o[expertType]) == 1})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var normalAbnormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 1 && parseInt(o[expertType]) == 2})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var normalIndeterminate = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 1 && parseInt(o[expertType]) == 3})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
+		var normalNormal = sortData(data, 1, 1)
 
-		var abnormalNormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 2 && parseInt(o[expertType]) == 1})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var abnormalAbnormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 2 && parseInt(o[expertType]) == 2})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var abnormalIndeterminate = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 2 && parseInt(o[expertType]) == 3})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
+		var normalAbnormal = sortData(data, 1, 2)
 
-		var indeterminateNormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 3 && parseInt(o[expertType]) == 1})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var indeterminateAbnormal = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 3 && parseInt(o[expertType]) == 2})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
-		var indeterminateIndeterminate = data
-			.filter(function(o){return parseInt(o.poopmd_type) == 3 && parseInt(o[expertType]) == 3})
-			.sort(function(a,b){
-				return a.color < b.color
-			})
+		var normalIndeterminate = sortData(data, 1, 3)
 
+		var abnormalNormal = sortData(data, 2, 1)
 
+		var abnormalAbnormal = sortData(data, 2, 2)
+
+		var abnormalIndeterminate = sortData(data, 2, 3)
+
+		var indeterminateNormal = sortData(data, 3, 1)
+
+		var indeterminateAbnormal = sortData(data, 3, 2)
+
+		var indeterminateIndeterminate = sortData(data, 3, 3)
 
 		var width = 700;
 		var height = 560;
@@ -222,7 +221,6 @@ function drawFig2(expertType){
 			.attr("x", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - 10) / cellSize) )
-				console.log(rowCount)
 				return margin.left + ( (((i-1)%rowCount)) * (cellSize) )
 			})
 			.attr("y", function(d,i){
@@ -233,7 +231,6 @@ function drawFig2(expertType){
 			.attr("data-x", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - 10) / cellSize) )
-				console.log(rowCount)
 				return margin.left + ( (((i-1)%rowCount)) * (cellSize) )
 			})
 			.attr("data-y", function(d,i){
@@ -284,7 +281,6 @@ function drawFig2(expertType){
 			.attr("x", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - 10) / cellSize) )
-				console.log(rowCount)
 				return margin.left + 2*width/3 + ( (((i-1)%rowCount)) * (cellSize) )
 			})
 			.attr("y", function(d,i){
@@ -295,7 +291,6 @@ function drawFig2(expertType){
 			.attr("data-x", function(d,i){
 				i += 1;
 				var rowCount = Math.floor( ((width/3 - 10) / cellSize) )
-				console.log(rowCount)
 				return margin.left + 2*width/3 + ( (((i-1)%rowCount)) * (cellSize) )
 			})
 			.attr("data-y", function(d,i){

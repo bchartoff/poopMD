@@ -594,4 +594,4 @@ function drawFig2(expertType){
 
 
 
-drawFig2("five_expert_type");
+drawFig2("six_expert_type");
